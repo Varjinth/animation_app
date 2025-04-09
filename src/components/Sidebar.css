@@ -1,0 +1,134 @@
+.sidebar {
+    width: 240px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .section-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .play-button {
+    background-color: #28a745;
+    color: white;
+    padding: 6px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .play-button:hover {
+    background-color: #218838;
+  }
+
+  .reset-btn {
+    background-color: #3b82f6;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .add-sprite {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #007bff;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .add-sprite-icon {
+    margin-right: 5px;
+    color: #007bff;
+  }
+  
+  .dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .dropdown select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .submit-sprite {
+    background-color: #007bff;
+    color: white;
+    padding: 5px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .submit-sprite:hover {
+    background-color: #0056b3;
+  }
+  
+  .block {
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .yellow-block {
+    background-color: #fbbf24;
+    color: white;
+  }
+  
+  .blue-block {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .icon-inline {
+    margin: 0 5px;
+  }
+
+  .repeat-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+
+    margin-top: 10px;
+    font-size: 14px;
+    gap: 8px;
+  }
+  
+  .repeat-toggle input[type="checkbox"] {
+    width: 16px;
+    cursor: pointer;
+    margin-right: 8px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .repeat-toggle label{
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  
