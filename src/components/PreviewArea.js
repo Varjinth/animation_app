@@ -5,13 +5,16 @@ import DogSprite from "./sprites/DogSprite";
 import BirdSprite from "./sprites/BirdSprite";
 import Sprite from "./Sprite";
 
-export default function PreviewArea({ sprites, setSprites, playAll, repeat, reset }) {
+export default function PreviewArea({ sprites, setSprites, playAll, repeat, reset, animationSwap }) {
   const spriteRefs = useRef({});
 
   const registerRef = (id, ref) => {
     spriteRefs.current[id] = ref;
   };
 
+
+    console.log(sprites[0].motions)
+  
 
 
   const isColliding = (el1, el2) => {
@@ -26,26 +29,66 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
     );
   };
 
+  const recentlySwapped = useRef(new Set());
+
   const checkAndSwapCollisions = () => {
     const ids = Object.keys(spriteRefs.current);
   
     for (let i = 0; i < ids.length; i++) {
       for (let j = i + 1; j < ids.length; j++) {
-        const el1 = spriteRefs.current[ids[i]];
-        const el2 = spriteRefs.current[ids[j]];
-
+        const id1 = ids[i];
+        const id2 = ids[j];
+  
+        const key = [id1, id2].sort().join("-"); // unique key for pair
+  
+        const el1 = spriteRefs.current[id1];
+        const el2 = spriteRefs.current[id2];
   
         if (el1 && el2 && isColliding(el1, el2)) {
+          if (recentlySwapped.current.has(key)) {
+            return; // skip if already swapped recently
+          }
+          console.log(el1)
+  
+          // ✅ Mark as recently swapped
+          recentlySwapped.current.add(key);
+          setTimeout(() => {
+            recentlySwapped.current.delete(key);
+          }, 1000); // reset after 1 second (or tweak as needed)
+  
+          console.log("🎯 Collision detected!");
+
+
+          const getTransformValues = (el) => {
+            const transform = el.style.transform;
+            const match = transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)\s*rotate\(([-\d.]+)deg\)/);
+            if (!match) return { x: 0, y: 0, rotation: 0 };
+            return {
+              x: parseFloat(match[1]),
+              y: parseFloat(match[2]),
+              rotation: parseFloat(match[3]),
+            };
+          };
+  
+          const pos1 = getTransformValues(el1);
+          const pos2 = getTransformValues(el2);
   
           setSprites((prevSprites) => {
             const updated = prevSprites.map(sprite => ({ ...sprite }));
-  
-            const idx1 = updated.findIndex(s => s.id === parseInt(ids[i]));
-            const idx2 = updated.findIndex(s => s.id === parseInt(ids[j]));
+            const idx1 = updated.findIndex(s => s.id === parseInt(id1));
+            const idx2 = updated.findIndex(s => s.id === parseInt(id2));
   
             if (idx1 !== -1 && idx2 !== -1) {
               const sprite1 = { ...updated[idx1] };
               const sprite2 = { ...updated[idx2] };
+
+              sprite1.x = pos1.x;
+            sprite1.y = pos1.y;
+            sprite1.rotation = pos1.rotation;
+
+            sprite2.x = pos2.x;
+            sprite2.y = pos2.y;
+            sprite2.rotation = pos2.rotation;
   
               const motions1 = [...sprite1.motions];
               const motions2 = [...sprite2.motions];
@@ -56,8 +99,8 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
               updated[idx1] = sprite1;
               updated[idx2] = sprite2;
   
-  
-              return updated; // Return updated array to update state
+              console.log("✅ Motions swapped!");
+              return updated;
             }
   
             return prevSprites;
@@ -67,14 +110,17 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
     }
   };
   
+    
   
 
   const renderSprite = (s) => {
     const commonProps = {
       sprite: s,
+      setSprites,
       playAll,
       repeat,
       reset,
+      animationSwap,
       onRegister: (ref) => registerRef(s.id, ref),
       checkCollision: checkAndSwapCollisions,
     };

@@ -131,4 +131,53 @@
     justify-content: center;
   }
   
+
+  .block-sidebar {
+    padding: 10px;
+  }
+  
+  .menu-section {
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  
+  .toggle-icon {
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .block {
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  /* .blue-block {
+    background-color: #d0ebff;
+    border: 1px solid #74c0fc;
+  } */
+  
+  .purple-block {
+    background-color: #e5dbff;
+    border: 1px solid #b197fc;
+  }
+  
+  .voice-text {
+    font-weight: bold;
+    margin-left: 4px;
+  }
+  
   
