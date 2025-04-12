@@ -2,7 +2,7 @@ import React, { useState,useEffect, useRef } from "react";
 
 
 
-export default function Sprite({ sprite,setSprites, playAll, repeat, reset, animationSwap,onRegister, checkCollision, svg }) {
+export default function Sprite({ sprite, playAll, repeat, reset, animationSwap,onRegister, checkCollision, svg }) {
   const spriteRef = useRef(null);
   const [message, setMessage] = useState("");
 
@@ -10,11 +10,6 @@ export default function Sprite({ sprite,setSprites, playAll, repeat, reset, anim
   let currentX = sprite.x;
   let currentY = sprite.y;
   let currentRotation = sprite.rotation;
-  // let currentX = 0;
-  // let currentY = 0;
-  // let currentRotation = 0;
-  
-
 
   useEffect(() => {
     if (onRegister) onRegister(spriteRef.current);
@@ -23,22 +18,16 @@ export default function Sprite({ sprite,setSprites, playAll, repeat, reset, anim
   const playMotions = async () => { 
     for (const motion of sprite.motions) {
       if (motion.startsWith("Move")) {
-
-        // const steps = parseInt(motion.match(/\d+/)?.[0] || "10");
-        const steps = 60;
+        const steps = 40;
         const angleRad = (currentRotation * Math.PI) / 180;
         currentX += steps * Math.cos(angleRad);
         currentY += steps * Math.sin(angleRad);
-        // checkCollision?.();
       } else if (motion.includes("Right")) {
-
         const angle = parseInt(motion.match(/\d+/)?.[0] || "15");
         currentRotation += angle;
-        // checkCollision?.();
       } else if (motion.includes("Left")) {
         const angle = parseInt(motion.match(/\d+/)?.[0] || "15");
         currentRotation -= angle;
-        // checkCollision?.();
       } else if (motion === "Go to x:0 y:0") {
         currentX = 0;
         currentY = 0;
@@ -53,14 +42,11 @@ export default function Sprite({ sprite,setSprites, playAll, repeat, reset, anim
         }
         await new Promise((res) => setTimeout(res, 600));
         continue; 
-
-      
       }
       else if (motion.startsWith("Say")) {
         const msg = motion.slice(4); 
         setMessage(msg);
       
-        // Optional: Speak it aloud
         const utterance = new SpeechSynthesisUtterance(msg);
         window.speechSynthesis.speak(utterance);
       
@@ -72,11 +58,9 @@ export default function Sprite({ sprite,setSprites, playAll, repeat, reset, anim
       if (spriteRef.current) {
         spriteRef.current.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${currentRotation}deg)`;
       }
-      
       if (animationSwap) {
         checkCollision();
       };      
-
       await new Promise((res) => setTimeout(res, 600));
     }
   };
@@ -102,18 +86,13 @@ export default function Sprite({ sprite,setSprites, playAll, repeat, reset, anim
   useEffect(() => {
     if (spriteRef.current) {
       spriteRef.current.style.transform = `translate(0px, 0px) rotate(0deg)`;
-      spriteRef.current.style.left = sprite.initialPosition['x'];
-      spriteRef.current.style.top = sprite.initialPosition['y'];
-
-
+      spriteRef.current.style.left = `${sprite.initialPosition['x']}px`;
+      spriteRef.current.style.top = `${sprite.initialPosition['y']}px`;
     }
     currentX = 0;
     currentY = 0;
     currentRotation = 0;
   }, [reset]);
-let counter = 0
-  console.log(`redered=${counter+1}`)
-
 
   return (
 
@@ -131,8 +110,8 @@ let counter = 0
     <div
       style={{
         position: "absolute",
-        top: "-30px", 
-        left: "20px", 
+        top: "30px", 
+        left: "80px", 
         background: "#fff",
         border: "1px solid #ccc",
         borderRadius: "8px",

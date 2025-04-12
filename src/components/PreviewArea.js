@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import "./PreviewArea.css";
 import CatSprite from "./sprites/CatSprite";
 import DogSprite from "./sprites/DogSprite";
@@ -11,11 +11,6 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
   const registerRef = (id, ref) => {
     spriteRefs.current[id] = ref;
   };
-
-
-    console.log(sprites[0].motions)
-  
-
 
   const isColliding = (el1, el2) => {
     if (!el1 || !el2) return false;
@@ -33,30 +28,27 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
 
   const checkAndSwapCollisions = () => {
     const ids = Object.keys(spriteRefs.current);
-  
+
     for (let i = 0; i < ids.length; i++) {
       for (let j = i + 1; j < ids.length; j++) {
         const id1 = ids[i];
         const id2 = ids[j];
-  
-        const key = [id1, id2].sort().join("-"); // unique key for pair
-  
+
+        const key = [id1, id2].sort().join("-");
+
         const el1 = spriteRefs.current[id1];
         const el2 = spriteRefs.current[id2];
-  
+
         if (el1 && el2 && isColliding(el1, el2)) {
           if (recentlySwapped.current.has(key)) {
             return; // skip if already swapped recently
           }
-          console.log(el1)
-  
-          // ✅ Mark as recently swapped
+
+          // Mark as recently swapped
           recentlySwapped.current.add(key);
           setTimeout(() => {
             recentlySwapped.current.delete(key);
-          }, 1000); // reset after 1 second (or tweak as needed)
-  
-          console.log("🎯 Collision detected!");
+          }, 10000); // reset after 10 second
 
 
           const getTransformValues = (el) => {
@@ -69,54 +61,64 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
               rotation: parseFloat(match[3]),
             };
           };
-  
+
           const pos1 = getTransformValues(el1);
           const pos2 = getTransformValues(el2);
-  
+         
+
           setSprites((prevSprites) => {
             const updated = prevSprites.map(sprite => ({ ...sprite }));
             const idx1 = updated.findIndex(s => s.id === parseInt(id1));
             const idx2 = updated.findIndex(s => s.id === parseInt(id2));
-  
+
             if (idx1 !== -1 && idx2 !== -1) {
               const sprite1 = { ...updated[idx1] };
               const sprite2 = { ...updated[idx2] };
 
               sprite1.x = pos1.x;
-            sprite1.y = pos1.y;
-            sprite1.rotation = pos1.rotation;
+              sprite1.y = pos1.y;
+              sprite1.rotation = pos1.rotation;
 
-            sprite2.x = pos2.x;
-            sprite2.y = pos2.y;
-            sprite2.rotation = pos2.rotation;
-  
+              sprite2.x = pos2.x;
+              sprite2.y = pos2.y;
+              sprite2.rotation = pos2.rotation;
+
               const motions1 = [...sprite1.motions];
               const motions2 = [...sprite2.motions];
-  
+
               sprite1.motions = motions2;
               sprite2.motions = motions1;
-  
+
               updated[idx1] = sprite1;
               updated[idx2] = sprite2;
-  
-              console.log("✅ Motions swapped!");
+
+            // Updating postion of other sprites
+              ids.forEach(id => {
+                if (id !== id1 && id !== id2) {
+                  const otherPos = getTransformValues(spriteRefs.current[id])
+                  const otherIndex=  updated.findIndex(s => s.id === parseInt(id));
+                  const otherSprite=  { ...updated[otherIndex] };
+                  otherSprite.x = otherPos.x;
+                  otherSprite.y = otherPos.y;
+                  otherSprite.rotation = otherPos.rotation;
+                  updated[otherIndex]=otherSprite
+                }
+              });
               return updated;
             }
-  
             return prevSprites;
           });
         }
       }
     }
   };
-  
-    
-  
+
+
+
 
   const renderSprite = (s) => {
     const commonProps = {
       sprite: s,
-      setSprites,
       playAll,
       repeat,
       reset,
@@ -127,11 +129,11 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
 
     switch (s.name) {
       case "Cat Sprite":
-        return <Sprite {...commonProps} svg ={CatSprite} />;
+        return <Sprite {...commonProps} svg={CatSprite} />;
       case "Dog Sprite":
-        return <Sprite {...commonProps}  svg ={DogSprite}/>;
+        return <Sprite {...commonProps} svg={DogSprite} />;
       case "Bird Sprite":
-        return <Sprite {...commonProps}  svg ={BirdSprite} />;
+        return <Sprite {...commonProps} svg={BirdSprite} />;
       default:
         return <div className="sprite-box" style={{ left: s.x, top: s.y }}>{s.name}</div>;
     }

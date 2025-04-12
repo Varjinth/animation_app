@@ -3,7 +3,7 @@ import Icon from "./Icon";
 import "./Sidebar.css";
 
 
-export default function Sidebar({ sprites, setSprites, addSprite, playAll, onPlay, reset, setReset, repeat, setRepeat, animationSwap, setAnimationSwap }) {
+export default function Sidebar({ sprites, setSprites, addSprite, onPlay, setReset, repeat, setRepeat, animationSwap, setAnimationSwap }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [visible, setVisible] = useState(true);
   const [selectedSprite, setSelectedSprite] = useState("")
@@ -15,10 +15,7 @@ export default function Sidebar({ sprites, setSprites, addSprite, playAll, onPla
       break;
     }
   }
-  const initialState = [
-    { name: "Cat Sprite", motions: [], x: 0, y: 0 },
-    { name: "Dog Sprite", motions: [], x: 0, y: 200 }
-  ]
+
   const [availableSprites, setAvailableSprites] = useState([
     "Dog Sprite",
     "Bird Sprite"
@@ -65,7 +62,10 @@ export default function Sidebar({ sprites, setSprites, addSprite, playAll, onPla
         y: 0,
         rotation: 0,
       }))
+
+      
     );
+
 
     setReset((prev) => !prev); 
     onPlay(false);             
@@ -107,27 +107,6 @@ export default function Sidebar({ sprites, setSprites, addSprite, playAll, onPla
         </div>
       )}
 
-
-
-      {/* <div className="section-title">Motion</div>
-
-      <div
-        className="block blue-block"
-        draggable
-        onDragStart={(e) => e.dataTransfer.setData("motion", "Move 10 steps")}
-      >
-        Move 10 steps
-      </div>
-
-      <div className="block blue-block" draggable onDragStart={(e) => e.dataTransfer.setData("motion", "Turn 15 degrees Left")}>
-        Turn <Icon name="undo" size={15} className="icon-inline" /> 15 degrees
-      </div>
-      <div className="block blue-block" draggable onDragStart={(e) => e.dataTransfer.setData("motion", "Turn 15 degrees Right")}>
-        Turn <Icon name="redo" size={15} className="icon-inline" /> 15 degrees
-      </div>
-      <div className="block blue-block" draggable onDragStart={(e) => e.dataTransfer.setData("motion", "Go to x:0 y:0")}>
-        Go to x:0 y:0
-      </div> */}
 
  <div className="menu-section">
         <div className="section-title">
