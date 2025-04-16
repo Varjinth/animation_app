@@ -4,8 +4,10 @@ import CatSprite from "./sprites/CatSprite";
 import DogSprite from "./sprites/DogSprite";
 import BirdSprite from "./sprites/BirdSprite";
 import Sprite from "./Sprite";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function PreviewArea({ sprites, setSprites, playAll, repeat, reset, animationSwap }) {
+export default function PreviewArea({ sprites, setSprites, playAll, repeat, reset, animationSwap, previewRef }) {
   const spriteRefs = useRef({});
 
   const registerRef = (id, ref) => {
@@ -16,6 +18,7 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
     if (!el1 || !el2) return false;
     const r1 = el1.getBoundingClientRect();
     const r2 = el2.getBoundingClientRect();
+    console.log(r1, r2)
     return !(
       r1.right < r2.left ||
       r1.left > r2.right ||
@@ -50,7 +53,6 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
             recentlySwapped.current.delete(key);
           }, 10000); // reset after 10 second
 
-
           const getTransformValues = (el) => {
             const transform = el.style.transform;
             const match = transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)\s*rotate\(([-\d.]+)deg\)/);
@@ -64,7 +66,7 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
 
           const pos1 = getTransformValues(el1);
           const pos2 = getTransformValues(el2);
-         
+
 
           setSprites((prevSprites) => {
             const updated = prevSprites.map(sprite => ({ ...sprite }));
@@ -78,30 +80,38 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
               sprite1.x = pos1.x;
               sprite1.y = pos1.y;
               sprite1.rotation = pos1.rotation;
+              sprite1.collided = true
 
               sprite2.x = pos2.x;
               sprite2.y = pos2.y;
               sprite2.rotation = pos2.rotation;
+              sprite2.collided = true
+
 
               const motions1 = [...sprite1.motions];
               const motions2 = [...sprite2.motions];
 
               sprite1.motions = motions2;
               sprite2.motions = motions1;
+              sprite1.freeze = false;
+              sprite2.freeze = false;
+              toast(`Collision detected between ${sprite1.name} and ${sprite2.name}!`);
+
+
 
               updated[idx1] = sprite1;
               updated[idx2] = sprite2;
 
-            // Updating postion of other sprites
+              // Updating postion of other sprites
               ids.forEach(id => {
                 if (id !== id1 && id !== id2) {
                   const otherPos = getTransformValues(spriteRefs.current[id])
-                  const otherIndex=  updated.findIndex(s => s.id === parseInt(id));
-                  const otherSprite=  { ...updated[otherIndex] };
+                  const otherIndex = updated.findIndex(s => s.id === parseInt(id));
+                  const otherSprite = { ...updated[otherIndex] };
                   otherSprite.x = otherPos.x;
                   otherSprite.y = otherPos.y;
                   otherSprite.rotation = otherPos.rotation;
-                  updated[otherIndex]=otherSprite
+                  updated[otherIndex] = otherSprite
                 }
               });
               return updated;
@@ -119,10 +129,14 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
   const renderSprite = (s) => {
     const commonProps = {
       sprite: s,
+      setSprites,
       playAll,
       repeat,
       reset,
       animationSwap,
+      previewRef,
+      toast,
+
       onRegister: (ref) => registerRef(s.id, ref),
       checkCollision: checkAndSwapCollisions,
     };
@@ -144,6 +158,7 @@ export default function PreviewArea({ sprites, setSprites, playAll, repeat, rese
       {sprites.map((s) => (
         <div key={s.id}>{renderSprite(s)}</div>
       ))}
+      <ToastContainer />
     </div>
   );
 }

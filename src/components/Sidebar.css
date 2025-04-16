@@ -91,6 +91,26 @@
     align-items: center;
     flex-wrap: wrap;
   }
+
+  .spriteblock {
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .close-icon {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 14px;
+      color: red;
+      padding-left: 8px;
+    }
+    
+  
   
   .yellow-block {
     background-color: #fbbf24;
@@ -110,9 +130,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
-
-    margin-top: 10px;
+    padding: 0px 8px 8px 8px;
+    margin-top: 0px;
     font-size: 14px;
     gap: 8px;
   }

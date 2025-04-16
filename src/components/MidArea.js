@@ -11,11 +11,11 @@ export default function MidArea({ sprites, setSprites, addMotion }) {
     const motion = e.dataTransfer.getData("motion");
     const fromSpriteId = e.dataTransfer.getData("from_s_id");
     const motionIndex = parseInt(e.dataTransfer.getData("motion_id"), 10);
-  
+
     if (motion) {
       addMotion(targetSpriteId, motion);
     }
-  
+
     if (fromSpriteId && !isNaN(motionIndex)) {
       setSprites(prevSprites =>
         prevSprites.map(sprite => {
@@ -29,7 +29,7 @@ export default function MidArea({ sprites, setSprites, addMotion }) {
       );
     }
   };
-  
+
 
   return (
     <div className="mid-area">
@@ -43,12 +43,12 @@ export default function MidArea({ sprites, setSprites, addMotion }) {
           <div className="sprite-name">{sprite.name}</div>
           <div className="dropped-actions">
             {sprite.motions.map((action, index) => (
-              <div key={index} className="action-block"  draggable
-              onDragStart={(e) => {
-                e.dataTransfer.setData("motion", action);
-                e.dataTransfer.setData("from_s_id", sprite.id);
-                e.dataTransfer.setData("motion_id", index);
-              }}
+              <div key={index} className="action-block" draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("motion", action);
+                  e.dataTransfer.setData("from_s_id", sprite.id);
+                  e.dataTransfer.setData("motion_id", index);
+                }}
               >
                 {action}
               </div>
